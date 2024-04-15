@@ -24,7 +24,7 @@ val dummyDishes = listOf(
     Dish("Pizza", 4.8f, R.drawable.pizza),
     Dish("Burger", 4.3f, R.drawable.foodsample),
     Dish("Sushi", 4.6f, R.drawable.sushi),
-    Dish("Italian Pasta", 4.6f, R.drawable.pasta),
+    Dish("Pasta", 4.6f, R.drawable.pasta),
     Dish("Indian", 4.6f, R.drawable.indian),
     Dish("Curries", 4.6f, R.drawable.cur),
     Dish("Desserts", 4.6f, R.drawable.dess),

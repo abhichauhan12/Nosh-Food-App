@@ -11,11 +11,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhishek.foodapp.R
@@ -26,6 +28,7 @@ data class FoodCart(
     val name : String,
     val imageResId: Int
 )
+
 
 
 @Composable
@@ -39,28 +42,38 @@ fun FoodCard(
         modifier = Modifier
             .wrapContentWidth()
             .shadow(
-                elevation = 16.dp,
+                elevation = 8.dp,
                 ambientColor = Orange,
                 spotColor = Orange,
             )
     ) {
         Row(
             modifier = Modifier.padding(4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = painterResource(id = imageRes),
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(32.dp)
                     .clip(RoundedCornerShape(corner = CornerSize(100.dp))),
                 contentScale = ContentScale.Crop,
                 contentDescription = foodName
             )
             Text(foodName ,
                 color = Blue,
-                fontSize = 24.sp,
-                modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 8.dp)
+                fontSize = 16.sp,
+                modifier = Modifier.padding( start = 12.dp, end = 8.dp)
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewFoodCard() {
+    FoodCard(
+        foodName = "Indian",
+        imageRes = R.drawable.foodsample
+    )
 }

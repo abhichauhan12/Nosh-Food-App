@@ -3,10 +3,12 @@ package com.abhishek.foodapp.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,12 +31,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhishek.foodapp.R
 import com.abhishek.foodapp.ui.theme.Blue
 import com.abhishek.foodapp.ui.theme.Orange
 import com.abhishek.foodapp.ui.theme.White
+
 
 data class Dish(
     val name: String,
@@ -45,7 +49,6 @@ data class Dish(
         return name.contains(query, ignoreCase = true)
     }
 }
-
 
 
 @Composable
@@ -61,13 +64,12 @@ fun DishCard(
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         backgroundColor = if (isSelected) Blue else Color.White,
         modifier = modifier
-            .padding(8.dp)
+            .padding(4.dp)
             .wrapContentWidth()
             .wrapContentHeight()
             .clickable { onSelect(dishName) }
             .shadow(
-                elevation = 16.dp,
-                ambientColor = Orange,
+                elevation = 8.dp,
                 spotColor = Orange,
                 shape = RoundedCornerShape(corner = CornerSize(16.dp))
             )
@@ -75,14 +77,13 @@ fun DishCard(
     ) {
         Column(
             modifier = Modifier
-//                .background(Blue)
                 .background(if (isSelected) Blue else Color.White),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
                     .size(160.dp)
-                    .padding(8.dp),
+                    .padding(4.dp).padding(top = 4.dp),
                 contentAlignment = Alignment.TopEnd
             ) {
                 // Dish Image
@@ -91,7 +92,7 @@ fun DishCard(
                     contentDescription = dishName,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(18.dp)),
+                        .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
                 //  Icon veg , non-veg
@@ -100,7 +101,7 @@ fun DishCard(
                     contentDescription = "veg , non-veg",
                     tint = Color.Red,
                     modifier = Modifier.padding(end = 8.dp, top = 8.dp)
-                        .size(16.dp)
+                        .size(12.dp)
                 )
 
 
@@ -108,9 +109,9 @@ fun DishCard(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = 12.dp)
+                    .offset(y = 8.dp)
                     .background(
-                        color = Orange.copy(alpha = 0.75f),
+                        color = Orange.copy(alpha = 0.9f),
                         shape = RoundedCornerShape( 16.dp),
                     )
                     .padding(horizontal = 6.dp, vertical = 4.dp)
@@ -120,11 +121,11 @@ fun DishCard(
                         painter = painterResource(id = R.drawable.ic_star),
                         contentDescription = "Rating",
                         tint = Color.White,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(8.dp)
                     )
                     Text(
                         text = " " + rating.toString(),
-                        fontSize = 14.sp,
+                        fontSize = 8.sp,
                         color = Color.White
 
                         )
@@ -139,37 +140,47 @@ fun DishCard(
             Text(
                 text = dishName,
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                fontSize = 16.sp,
                 color = if (isSelected) White else Color.Black,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .widthIn(max = 160.dp)
+                    .widthIn(max = 100.dp)
                     .padding(8.dp)
             )
 
             // Rating and Prep Time
             Row(
                 modifier= Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically) {
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.cook),
                     contentDescription = "Rating",
                     tint = if (isSelected) White else Color.Black,
-                    modifier = Modifier.size(20.dp).alpha(0.7f)
+                    modifier = Modifier.size(14.dp).alpha(0.7f)
                 )
                 Text(
                     text = "30 min · Medium prep",
+                    fontSize = 14.sp,
                     color = if (isSelected) White else Color.Black,
-                    modifier = Modifier.padding(start = 4.dp).alpha(0.7f)
+                    modifier = Modifier.padding(start = 4.dp).alpha(0.5f)
                 )
-//                Text(
-//                    text = "·Medium prep",
-//                    color = Color.White,
-//                    modifier = Modifier.padding(start = 8.dp).alpha(0.7f)
-//                )
             }
         }
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewDishCard() {
+    DishCard(
+        dishName = "Spaghetti Bolognese",
+        rating = 4.5f,
+        isSelected = false,
+        onSelect = {},
+        imageRes = R.drawable.foodsample
+    )
+}
