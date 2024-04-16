@@ -1,5 +1,6 @@
 package com.abhishek.foodapp.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -48,10 +50,19 @@ import java.util.Calendar
 
 @Composable
 fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Unit) {
-    val calendar = remember { mutableStateOf(Calendar.getInstance()) }
-    val amPmState = remember { mutableStateOf(if (calendar.value.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM") }
 
-    val isAm = remember { mutableStateOf(calendar.value.get(Calendar.AM_PM) == Calendar.AM) }
+    val calendar = Calendar.getInstance()
+    val currentHour24 = calendar.get(Calendar.HOUR_OF_DAY)
+    val isAm = remember { mutableStateOf(currentHour24 < 12) }
+    val currentHour = if (currentHour24 % 12 == 0) 12 else currentHour24 % 12
+    val currentMinute = calendar.get(Calendar.MINUTE)
+
+    val hours = (1..12).map { it.toString().padStart(0, '0') }
+    val minutes = (0..59).map { it.toString().padStart(0, '0') }
+
+    val selectedHour = remember { mutableStateOf(currentHour.toString().padStart(2, '0')) }
+    val selectedMinute = remember { mutableStateOf(currentMinute.toString().padStart(2, '0')) }
+
 
     Box (modifier = Modifier
         .fillMaxSize()
@@ -62,11 +73,9 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White ,  RoundedCornerShape(20.dp))
-                    .padding(8.dp)
+                    .background(Color.White, RoundedCornerShape(20.dp))
+                    .padding(8.dp),
 
-                ,
-//            horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
                     Box(modifier = Modifier.padding(start = 8.dp, top = 8.dp)){
@@ -89,25 +98,32 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Custom time picker could go here, but let's just show the current time for now.
-                // You'll need to implement a scrolling time selector as per your design.
-//            Text("${calendar.value.get(Calendar.HOUR)} : ${calendar.value.get(Calendar.MINUTE)} $amPmState")
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Box (
+                    Row (
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
                             .background(GreyGrey)
-                            .padding(60.dp)
+                            .padding(20.dp)
+                            .padding(start = 60.dp, end = 60.dp)
                     ){
-                        Text(text = "${calendar.value.get(Calendar.HOUR).toString().padStart(2, '0')} : ${calendar.value.get(
-                            Calendar.MINUTE).toString().padStart(2, '0')} ",
-                            fontSize = 56.sp,
-                            color = Color.Blue,
+
+                        InfiniteNumberPicker(
+                            modifier = Modifier.width(40.dp),
+                            list = hours,
+                            firstIndex = currentHour -2,
+                            onSelect = { selectedHour.value = it }
                         )
+
+                        InfiniteNumberPicker(
+                            modifier = Modifier.width(40.dp),
+                            list = minutes,
+                            firstIndex = currentMinute,
+                            onSelect = { selectedMinute.value = it }
+                        )
+
                     }
 
 
@@ -119,21 +135,23 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Button(onClick = { amPmState.value = "AM"
-                            isAm.value = false
-                        },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = if (isAm.value) Blue else Blue)
+                        Button(onClick = {  isAm.value = true },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = if (isAm.value) Color.Blue else Color.LightGray)
                         ) {
-                            Text("AM" , fontSize = 24.sp , color = Color.White)
+                            Text("AM" , fontSize = 24.sp ,
+                                color =  if (isAm.value) Color.White else Blue
+                            )
 
                         }
 
                         Spacer(modifier = Modifier.width(30.dp))
 
-                        Button(onClick = { amPmState.value = "PM" },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = if (isAm.value) BlueGrey else BlueGrey)
+                        Button(onClick = { isAm.value = false },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = if (!isAm.value) Color.Blue else Color.LightGray)
                         ) {
-                            Text("PM" , fontSize = 24.sp, color = Blue)
+                            Text("PM" , fontSize = 24.sp,
+                                color = if (!isAm.value) Color.White else Blue
+                            )
                         }
                     }
                 }
@@ -177,7 +195,6 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
                                 Modifier.shadow(
                                     elevation = 0.dp,
                                     shape = RoundedCornerShape(corner = CornerSize(16.dp)),
-                                    // This creates a subtle shadow that might not be the color you want but is necessary for elevation.
                                 )
                             )
                             .border(
@@ -186,14 +203,10 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
                                 shape = RoundedCornerShape(corner = CornerSize(20.dp))
                             )
                             .padding(8.dp)
-//                        .shadow(
-//                            elevation = 4.dp,
-//                            ambientColor = Orange,
-////                            spotColor = Orange,
-//                        )
 
 
                     ){
+
 
                         Text(text = buildAnnotatedString {
                             withStyle(
@@ -228,6 +241,9 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
 
                     ){
 
+                        val context = LocalContext.current
+
+
                         Text(text = buildAnnotatedString {
                             withStyle(
                                 SpanStyle(
@@ -238,23 +254,17 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
                             ){
                                 append("Cook Now")
                             }
-                        })
+                        }
+                        ,Modifier.clickable {
+                            //Toast
+                                Toast.makeText(context, "Time Selected: ${selectedHour.value}:${selectedMinute.value}", Toast.LENGTH_SHORT).show()
+                                onDismiss()
+                            }
+                        )
+
 
                     }
 
-//                Button(onClick = {
-//                    // Store the selected time in calendar and call onCookNow
-//                    if (amPmState.value == "PM" && calendar.value.get(Calendar.HOUR_OF_DAY) < 12) {
-//                        calendar.value.add(Calendar.HOUR, 12)
-//                    } else if (amPmState.value == "AM" && calendar.value.get(Calendar.HOUR_OF_DAY) >= 12) {
-//                        calendar.value.add(Calendar.HOUR, -12)
-//                    }
-//                    onCookNow(calendar.value)
-//                },
-//
-//                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green)) {
-//                    Text("Cook Now")
-//                }
                 }
             }
         }
@@ -263,33 +273,6 @@ fun ScheduleCookingTimeDialog(onDismiss: () -> Unit, onCookNow: (Calendar) -> Un
 
 }
 
-
-
-@Composable
-fun TimePickerDialog(currentTime: Calendar, onTimeSelected: (Int, Int) -> Unit, onDismissRequest: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = { onDismissRequest() },
-        title = { Text("Select Time") },
-        text = {
-            Text("Current Time: ${currentTime.get(Calendar.HOUR_OF_DAY)}:${currentTime.get(Calendar.MINUTE)}")
-        },
-        confirmButton = {
-            Button(onClick = {
-                // Simulate time selection
-                val hour = currentTime.get(Calendar.HOUR_OF_DAY)
-                val minute = currentTime.get(Calendar.MINUTE)
-                onTimeSelected(hour, minute)
-            }) {
-                Text("Select")
-            }
-        },
-        dismissButton = {
-            Button(onClick = { onDismissRequest() }) {
-                Text("Cancel")
-            }
-        }
-    )
-}
 
 @Preview(
     showSystemUi = true,

@@ -1,5 +1,7 @@
 package com.abhishek.foodapp.ui.theme
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -21,4 +23,14 @@ val LightGrey = Color(0xFFD6D6D6)
 val BlueGrey = Color(0xFFD0E2FD)
 val GreyGrey = Color(0xFFE4E4E6)
 
+
+val spinnerGradient = Brush.linearGradient(
+    0.0f to Color(0xFFFFFFFF),
+    0.3f to Color(0x00000000),
+    0.5f to Color(0x00000000),
+    0.7f to Color(0x00000000),
+    1.0f to Color(0xFFFFFFFF),
+    start = Offset(0.0f, -13.0f),
+    end = Offset(0.0f, 320.0f)
+)
 

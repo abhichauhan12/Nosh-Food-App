@@ -53,7 +53,6 @@ import com.abhishek.foodapp.R
 import com.abhishek.foodapp.home.DishCard
 import com.abhishek.foodapp.home.FoodCard
 import com.abhishek.foodapp.home.ScheduleCookingTimeDialog
-import com.abhishek.foodapp.home.TimePickerDialog
 import com.abhishek.foodapp.home.dummyDishes
 import com.abhishek.foodapp.home.dummyFoodList
 import com.abhishek.foodapp.ui.theme.Blue
@@ -286,19 +285,19 @@ fun DishCardsRow() {
     }
 
     // Show time picker dialog
-    if (showTimePicker.value) {
-        TimePickerDialog(
-            currentTime = currentTime.value,
-            onTimeSelected = { hour, minute ->
-                // Update the current time state with the selected time.
-                currentTime.value.set(Calendar.HOUR_OF_DAY, hour)
-                currentTime.value.set(Calendar.MINUTE, minute)
-                // Perform any actions with the selected time here.
-                showTimePicker.value = false // Hide the dialog after selection.
-            },
-            onDismissRequest = { showTimePicker.value = false }
-        )
-    }
+//    if (showTimePicker.value) {
+//        TimePickerDialog(
+//            currentTime = currentTime.value,
+//            onTimeSelected = { hour, minute ->
+//                // Update the current time state with the selected time.
+//                currentTime.value.set(Calendar.HOUR_OF_DAY, hour)
+//                currentTime.value.set(Calendar.MINUTE, minute)
+//                // Perform any actions with the selected time here.
+//                showTimePicker.value = false // Hide the dialog after selection.
+//            },
+//            onDismissRequest = { showTimePicker.value = false }
+//        )
+//    }
 }
 
 

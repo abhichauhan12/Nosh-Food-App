@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Icon
 import androidx.compose.material.NavigationRailItem
@@ -72,16 +73,13 @@ fun NavigationSideBar(
 
     NavigationRail(
         contentColor = Color.White,
-        modifier = Modifier
-            .wrapContentWidth()
-//            .padding(top = 8.dp, bottom = 8.dp)
-        ,
+        modifier = Modifier.wrapContentWidth()
+            .padding(),
     ) {
         Column(
-            modifier =Modifier
-//                .padding(top = 16.dp, bottom = 16.dp)
-                ,
-            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier =Modifier,
+            verticalArrangement  = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         )
         {
 
@@ -89,14 +87,9 @@ fun NavigationSideBar(
                 // Orange if selected, else blue
                 val iconColor = if (selectedItemIndex == index) Orange else Blue
 
-//                Row (modifier = Modifier,
-//                    horizontalArrangement = Arrangement.Center,
-//                    verticalAlignment = Alignment.CenterVertically
-//
-//                    ){
-
                     Column(
                         modifier = Modifier,
+                        verticalArrangement  = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ){
 
@@ -108,40 +101,11 @@ fun NavigationSideBar(
 
                         Box (
                             modifier = Modifier
-//                                .padding(bottom = 8.dp)
                         ){
                             Text(text = item.title, color = iconColor, fontSize = 12.sp)
                         }
 
                     }
-
-//                    if (selectedItemIndex == index){
-//                        Box(
-//                            contentAlignment = Alignment.Center,
-//                            modifier = Modifier.offset(8.dp),
-//
-//                            ){
-//
-//                            Image(painter = painterResource(id = R.drawable.ic_circle_white),
-//                                contentDescription = "white circle",
-//                                modifier = Modifier.size(32.dp)
-//                            )
-//
-//                            Image(painter = painterResource(id = R.drawable.ic_circle_orange),
-//                                contentDescription = "Orange circle",
-//                                modifier = Modifier.size(16.dp)
-//                            )
-//                        }
-//                    }
-
-
-
-
-//                }
-
-
-
-
 
 
             }
